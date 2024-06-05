@@ -39,4 +39,4 @@ ps:
 #docker stack deploy -c docker-compose.yml my-nginx-stack
 
 #docker-compose up -d -->
-# The -d option in Docker commands, such as docker-compose up -d, stands for "detached mode." When you run a Docker command with this option, Docker will start the containers in the background and not attach the console to the container's standard input, output, and standard error. This means that the command will return immediately, and you won't see the output of the container in your terminal.
+:x

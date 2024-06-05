@@ -16,11 +16,21 @@ down:
 	@echo "Stopping the services..."
 	docker compose -f $(DOCKER_COMPOSE_FILE) down
 
+rm_volume: down
+#	@docker volume rm wordpress_data
+#	@docker volume rm mariadb_data
+
+rm_image: down
+#	@docker image rm nginx:42 -f
+	@docker image rm wordpress:42 -f
+	@docker image rm mariadb:42 -f
+
+
 # Clean up the Docker environment
-clean: down
+clean: rm_volume rm_image
 	@echo "Cleaning up unused Docker resources..."
-	docker system prune -f
 	docker builder prune -f
+	docker system prune -f
 	@echo "Cleaning up docker volumes directories..."
 	sudo rm -rf srcs/*_data
 

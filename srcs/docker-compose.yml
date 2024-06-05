@@ -3,6 +3,7 @@ services:
   mariadb:
     build: ./requirements/mariadb
     container_name: mariadb
+    image: mariadb:42
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
@@ -17,11 +18,12 @@ services:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
       timeout: 5s
-      retries: 3
+      retries: 5
 
   wordpress:
     build: ./requirements/wordpress
     container_name: wordpress
+    image: wordpress:42
     restart: always
     environment:
       WORDPRESS_DB_HOST: mariadb:3306
@@ -46,6 +48,7 @@ services:
 #  nginx:
 #    build: ./requirements/nginx
 #    container_name: nginx
+#    image: nginx:42
 #    restart: always
 #    ports:
 #      - "443:443"
