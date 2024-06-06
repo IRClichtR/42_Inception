@@ -49,6 +49,11 @@ RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli
 # Supprimer le script policy-rc.d après l'installation
 RUN rm /usr/sbin/policy-rc.d
 
+# download wordpress and move to /var:www/html
+RUN curl -o /tmp/wordpress.tar.gz https://wordpress.org/latest.tar.gz
+RUN tar -xzf /tmp/wordpress.tar.gz -C /tmp
+RUN mkdir -p /var/www/ && mkdir /var/www/html
+RUN mv /tmp/wordpress/* /var/www/html && chown -R root:root /var/www/html
 
 COPY ./conf/docker-entrypoint.sh /usr/local/bin/
 COPY ./conf/www.conf /etc/php/7.4/fpm/pool.d/www.conf
@@ -59,7 +64,5 @@ EXPOSE 9000
 
 # Set entrypoint
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
-
-
 
 CMD ["/usr/sbin/php7.4-fpm", "-F"]
