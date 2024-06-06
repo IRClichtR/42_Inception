@@ -45,6 +45,8 @@ services:
       - ./wordpress_data:/var/www/html:ro
     networks:
       - inception
+    depends_on:
+      - wordpress
 
 networks:
   inception:

@@ -1,0 +1,5 @@
+*.swp
+*.*.u
+.*.un~
+wordpress_data
+mariadb_data

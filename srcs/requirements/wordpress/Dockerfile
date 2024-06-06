@@ -44,16 +44,11 @@ RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli
     mv wp-cli.phar /usr/local/bin/wp-cli.phar
 
 
-# Ensure the /var/www/html directory exists
-RUN mkdir -p /var/www/html
+# Créer les répertoires de journalisation PHP-FPM
+RUN mkdir -p /var/log/php7.4-fpm && touch /var/log/php7.4-fpm/access.log && touch /var/log/php7.4-fpm/error.log
 
-# Download, extract WordPress, move files, and set permissions
-RUN wget https://wordpress.org/latest.tar.gz
-RUN tar -xzvf latest.tar.gz
-RUN mv wordpress/* /var/www/html/
-RUN chown -R root:root /var/www/html \
-    && rm -rf latest.tar.gz wordpress
-
+# Créer le répertoire pour le socket PHP-FPM
+RUN mkdir -p /run/php
 
 COPY ./conf/docker-entrypoint.sh /usr/local/bin/
 COPY ./conf/www.conf /etc/php/7.4/fpm/pool.d/www.conf
