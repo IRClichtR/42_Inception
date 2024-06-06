@@ -5,11 +5,8 @@ services:
     container_name: mariadb
     image: mariadb:42
     restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    env_file:
+      - .env
     volumes:
       - ./mariadb_data:/var/lib/mysql
     networks:
@@ -25,18 +22,8 @@ services:
     container_name: wordpress
     image: wordpress:42
     restart: always
-    environment:
-      WORDPRESS_DB_HOST: mariadb:3306
-      WORDPRESS_DB_USER: ${MYSQL_USER}
-      WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
-      WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
-      DOMAIN_NAME: ${DOMAIN_NAME}
-      WP_ADMIN_USER: ${WP_ADMIN_USER}
-      WP_ADMIN_PASSWORD: ${WP_ADMIN_PASSWORD}
-      WP_ADMIN_EMAIL: ${WP_ADMIN_EMAIL}
-      WP_USER: ${WP_USER}
-      WP_USER_PASSWORD: ${WP_USER_PASSWORD}
-      WP_USER_EMAIL: ${WP_USER_EMAIL}
+    env_file:
+      - .env
     volumes:
       - ./wordpress_data:/var/www/html
     networks:
@@ -45,15 +32,19 @@ services:
       mariadb:
         condition: service_healthy
 
-#  nginx:
-#    build: ./requirements/nginx
-#    container_name: nginx
-#    image: nginx:42
-#    restart: always
-#    ports:
-#      - "443:443"
-#    volumes:
-#      - ./wordpress_data:/var/www/html:ro
+  nginx:
+    build: ./requirements/nginx
+    container_name: nginx
+    image: nginx:42
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "443:443"
+    volumes:
+      - ./wordpress_data:/var/www/html:ro
+    networks:
+      - inception
 
 networks:
   inception:

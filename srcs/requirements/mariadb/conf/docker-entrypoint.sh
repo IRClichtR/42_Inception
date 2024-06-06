@@ -7,6 +7,8 @@ set -e
 mkdir -p /run/mysqld /var/lib/mysql
 chown -R mysql:mysql /run/mysqld /var/lib/mysql
 
+echo $MY
+
 # Initialize the database if it hasn't been initialized
 if [ ! -d "/var/lib/mysql/mysql" ]; then
     echo 'Initializing database...'

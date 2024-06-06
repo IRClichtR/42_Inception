@@ -1,20 +1,33 @@
 #!/bin/bash
-# srcs/requirements/wordpress/conf/docker-entrypoint.sh
 
-set -e
+# Wait for database to launch
+# while ! mysqladmin ping -h"$MYSQL_HOSTNAME" --silent; do 
+#   echo "Waiting for database connection..."
+#   sleep 2
+# done
 
-# Check if WordPress is already installed
-if ! wp core is-installed --allow-root; then
-    echo "Setting up WordPress..."
-    # Download WordPress
-    wp core download --allow-root
-    # Generate wp-config.php
-    wp config create --dbname="$WORDPRESS_DB_NAME" --dbuser="$WORDPRESS_DB_USER" --dbpass="$WORDPRESS_DB_PASSWORD" --dbhost="$WORDPRESS_DB_HOST" --allow-root
-    # Install WordPress
-    wp core install --url="https://$DOMAIN_NAME" --title="WordPress Site" --admin_user="$WP_ADMIN_USER" --admin_password="$WP_ADMIN_PASSWORD" --admin_email="$WP_ADMIN_EMAIL" --skip-email --allow-root
-    # Create additional user
-    wp user create "$WP_USER" "$WP_USER_EMAIL" --role=author --user_pass="$WP_USER_PASSWORD" --allow-root
+
+
+# DOwnload wordpress and put it into /var/www/html directory
+if [ ! -f /var/www/html/wp-config.php ]; then
+  echo "Downloading WordPress..."
+  curl -o /tmp/wordpress.tar.gz https://wordpress.org/latest.tar.gz
+  echo "Extracting WordPress..."
+  tar -xzf /tmp/wordpress.tar.gz -C /tmp
+  echo "Moving WordPress files to /var/www/html..."
+  mv /tmp/wordpress/* /var/www/html/
+  echo "Setting permissions..."
+  chown -R www-data:www-data /var/www/html
+  chmod -R 755 /var/www/html
 fi
 
+#check if wp-config.php exist
+if [ ! -f /var/www/html/wp-config.php ]; then
+  /usr/local/bin/wp-cli.phar config create --dbname="$MYSQL_DATABASE" --dbuser="$MYSQL_USER" --dbpass="$MYSQL_PASSWORD" --dbhost="$MYSQL_HOSTNAME" --path=/var/www/html --allow-root
+  /usr/local/bin/wp-cli.phar core install --url=http://"$DOMAIN_NAME" --title="Deep Inception" --admin_user="$WP_SURUSER" --admin_password="$WP_SURPHRASE" --admin_email="$WP_SUREMAIL" --path=/var/www/html --skip-email --allow-root
+fi 
+
 echo "Starting PHP-FPM..."
-exec "$@"
+exec /usr/sbin/php-fpm7.4 -F
+#which php-fpm
+#php-fpm -var

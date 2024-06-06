@@ -7,7 +7,7 @@ RUN apt upgrade -y
 
 # Install OpenSSL
 RUN apt-get install -y openssl && mkdir -p /etc/nginx/ssl
-RUN openssl req -newkey rsa:4096 -x509 -sha256 -days 365 -nodes -out /etc/nginx/ssl/cert.pem -keyout /etc/nginx/ssl/key.pem -subj "/CN=elberreb.42.fr"
+RUN openssl req -newkey rsa:4096 -x509 -sha256 -days 365 -nodes -out /etc/nginx/ssl/cert.pem -keyout /etc/nginx/ssl/key.pem -subj "/CN=ftuernal.42.fr"
 
 # Install NGINX and PHP-FPM
 RUN apt-get install nginx php-fpm -y

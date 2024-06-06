@@ -21,7 +21,7 @@ rm_volume: down
 #	@docker volume rm mariadb_data
 
 rm_image: down
-	@docker image rm nginx:42 -f
+#	@docker image rm nginx:42 -f
 	@docker image rm wordpress:42 -f
 	@docker image rm mariadb:42 -f
 
