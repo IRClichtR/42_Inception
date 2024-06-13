@@ -1,4 +1,6 @@
 *.swp
 .*.un~
+*.env
+.en
 wordpress_data
 mariadb_data
